@@ -1,19 +1,54 @@
-const { createContext, useState, useContext } = require("react");
-const ThemeContext = createContext( { dark : false , toggleTheme : ()=>{} } );
+import { CssBaseline } from "@mui/material";
+import {
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+} from "@mui/material/styles";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
-const ThemeProvider = ({children})=>{
-    
-    const [dark  ,setDark] = useState(false);
-    
-    const toggleTheme = ()=>{
-    setTheme(!dark) 
-    } 
+const ColorModeContext = createContext({
+  mode: "dark",
+  toggleColorMode: () => {},
+});
 
-    return (<ThemeContext.Provider value={{dark , toggleTheme}}> {children} </ThemeContext.Provider>)
-}
+const ThemeProvider = ({ children }) => {
+  const [dark, setDark] = useState(false);
 
-export const useTheme = ()=>{
-      return useContext(ThemeContext) 
-}
+  const toggleTheme = () => setDark(!dark);
 
-export default  ThemeProvider 
+  const theme = useMemo(() => {
+    return createTheme({
+      palette: {
+        mode: dark ? "dark" : "light",
+        primary: {
+          main: "#3f51b5",
+        },
+        secondary: {
+          main: "#f50057",
+        },
+      },
+    });
+  }, [dark]);
+
+  return (
+    <ColorModeContext.Provider
+      value={{ mode: dark ? "dark" : "light", toggleColorMode: toggleTheme }}
+    >
+      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+    </ColorModeContext.Provider>
+  );
+};
+
+//   theme = responsiveFontSizes(theme);
+
+export const useToggleColorMode = () => {
+  const { mode, toggleColorMode } = useContext(ColorModeContext);
+  return [mode, toggleColorMode];
+};
+
+export default ThemeProvider;

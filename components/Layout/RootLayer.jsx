@@ -1,10 +1,20 @@
+//https://ali-atwa.medium.com/getting-started-with-material-ui-for-react-59c82d9ffd93
+
+import { useToggleColorMode } from "@/providers/ThemeProvider";
 import {
   AccountCircle,
   Draw,
+  AccountBox as AccountBoxIcon,
+  Search as SearchIcon,
   Mail as MailIcon,
   Menu as MenuIcon,
+  Analytics as AnalyticsIcon,
+  Chat as ChatIcon,
+  Rectangle,
+  FileCopy as FileCopyIcon,
 } from "@mui/icons-material";
 import {
+  Divider,
   AppBar,
   Avatar,
   IconButton,
@@ -20,43 +30,45 @@ import {
   ListItemButton,
   ListItemText,
   List,
+  Input,
+  InputAdornment,
+  Stack,
+  Button,
+  Switch,
 } from "@mui/material";
+
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { useState } from "react";
 
+const sampleIcons = [AccountBoxIcon, SearchIcon, MailIcon, MenuIcon];
+
+const links = [
+  { label: "analytics", Icon: AnalyticsIcon },
+  { label: "chat", Icon: ChatIcon },
+  { label: "files", Icon: FileCopyIcon },
+  { label: "market", Icon: AccountBoxIcon },
+];
+
 const RootLayout = ({ children }) => {
-  const [auth, setAuth] = useState();
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-//https://www.geeksforgeeks.org/react-mui-drawer-navigation/
-//https://codesandbox.io/p/sandbox/material-demo-forked-0r67w9?file=%2Fdemo.js%3A127%2C9-127%2C23
-//https://codesandbox.io/p/sandbox/sharp-zeh-qgsmnz?file=%2Fsrc%2FDemo.tsx%3A128%2C13
-
-
-//AppBar ->Toolbar ->IconButton ->MenuIcon->Typography
-  //.MuiDrawer-paper
-
+  const [mode, toggle] = useToggleColorMode();
+  console.log(mode);
   return (
-    <>
-<Box display='flex' width="100%" height="100vh" >
-    <AppBar position="fixed" >
-        <Toolbar>
-
-        </Toolbar>
-    </AppBar>
-    <Box component='nav' sx={{width:240 , flexShrink:0 }} > <Drawer variant='permanent'  sx={{ display:'block' , '& .MuiDrawer-paper':{ boxSizing:'border-box' , width:240 } }} open > SideBar Content </Drawer> </Box>
-    <Box component='main' sx={ {width:'calc(100% - 240px)' , flexGrow:1}  }  >
-    Hello dev 
-    </Box>
-</Box>
-    </>
+    <div>
+      <Box component="div" position="fixed">
+        <AppBar>
+          <Toolbar>
+            <IconButton size="large" color="inherit">
+              <MenuIcon fontSize="inherit" />
+            </IconButton>
+            <Typography flexGrow={1} variant="h6">
+              Analytics
+            </Typography>
+            <Switch onChange={toggle} />
+          </Toolbar>
+        </AppBar>
+        <Box component="div">{children}</Box>
+      </Box>
+    </div>
   );
 };
 
